@@ -19,28 +19,26 @@
 				"items": {
 					"title": "condition",
 					"description": "Condition to be asserted",
-					"anyOf": [
-						{
-							"title": "functional condition",
-							"type": "object",
-							"properties": {
-								"func": {
-									"title": "function",
-									"type": "string",
-									"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
-								}
-							},
-							"required": ["func"],
-							"additionalProperties": true
-						},
-						{
-							"title": "literal or variable condition"
-						}
-					]
+					"type": "object",
+					"properties": {
+						"$func": {"$ref": "#/definitions/symbol"},
+						"$arg": {"$ref": "#/definitions/symbol"}
+					},
+					"required": ["$arg"],
+					"additionalProperties": true
 				}
 			}
 		},
 		"required": ["est"]
 	},
-	"minItems": 0
+	"minItems": 0,
+
+	"definitions": {
+		"symbol": {
+			"title": "symbol name",
+			"description": "key of a symbol (function or variable)",
+			"type": "string",
+			"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+		}
+	}
 }

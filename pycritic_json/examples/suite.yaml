@@ -2,21 +2,19 @@
     mark: 1
     comment: "Test"
   cond:
-    - $var1
+    - arg: var1
 
-    # binary comparison functions: lt, le, gt, ge
+    # comparison functions: lt, le, gt, ge, eq, ne
     - func: lt
-      l: $var2
-      r: 5.2
+      arg: var2
+      example: 5.2
 
 - est:
     mark: 1
   cond:
     - func: eq
-      args:
-        - 5
-        - $var4
-        - $var8
+      arg: var4
+      example: 5
   
 - est:
     mark: 1
@@ -27,12 +25,9 @@
     # xfit  -> (min, max]
     # nxfit -> [min, max]
     - func: fit
+      arg: var3
       min: 6
       max: 10
-
-
-- est:
-    mark: 2
-  cond:
-    - func: not
-      arg: $var3
+    - func: regex
+      arg: var10
+      pattern: "^some pattern$"
