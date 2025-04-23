@@ -1,0 +1,38 @@
+- est:
+    mark: 1
+    comment: "Test"
+  cond:
+    - $var1
+
+    # binary comparison functions: lt, le, gt, ge
+    - func: lt
+      l: $var2
+      r: 5.2
+
+- est:
+    mark: 1
+  cond:
+    - func: eq
+      args:
+        - 5
+        - $var4
+        - $var8
+  
+- est:
+    mark: 1
+    comment: "'or' operator analogue"
+  cond:
+    # fit   -> (min, max)
+    # nfit  -> [min, max)
+    # xfit  -> (min, max]
+    # nxfit -> [min, max]
+    - func: fit
+      min: 6
+      max: 10
+
+
+- est:
+    mark: 2
+  cond:
+    - func: not
+      arg: $var3
