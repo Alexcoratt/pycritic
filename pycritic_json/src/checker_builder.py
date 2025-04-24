@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import typing as t
 
 import pycritic
-from data_loader import CheckerDataLoader
+from .data_loader import CheckerDataLoader
 
 
 

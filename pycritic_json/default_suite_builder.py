@@ -110,10 +110,12 @@ class DefaultCriterionDataLoader(CriterionDataLoader[t.Any]):
 
 
 	def __init__(self, raw: t.Any) -> None:
+		if not isinstance(raw, t.Mapping):
+			raise TypeError(f"mapping expected: {raw}")
 		self.__estimation = raw["est"]
 		self.__checkers = map(
 			DefaultCriterionDataLoader.CHECKER_BUILDER,
-			raw["cond"]
+			raw.get("cond", [])
 		)
 
 
@@ -145,7 +147,7 @@ def loadSchema() -> t.Any:
 
 
 SCHEMA_ENV_KEY = "PYCRITIC_SUITE_SCHEMA"
-DEFAULT_SCHEMA_FILENAME = "../schemas/suite.schema.json"
+DEFAULT_SCHEMA_FILENAME = "schemas/suite.schema.json"
 
 
 def getSchemaFilename() -> str:

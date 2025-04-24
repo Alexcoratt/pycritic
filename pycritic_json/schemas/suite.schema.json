@@ -21,10 +21,10 @@
 					"description": "Condition to be asserted",
 					"type": "object",
 					"properties": {
-						"$func": {"$ref": "#/definitions/symbol"},
-						"$arg": {"$ref": "#/definitions/symbol"}
+						"func": {"$ref": "#/definitions/symbol"},
+						"arg": {"$ref": "#/definitions/symbol"}
 					},
-					"required": ["$arg"],
+					"required": ["arg"],
 					"additionalProperties": true
 				}
 			}
