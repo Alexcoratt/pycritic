@@ -1,5 +1,4 @@
 import typing as t
-import jsonschema
 
 import pycritic
 from pycritic import Estimation
@@ -24,18 +23,18 @@ class BasicJsonSuiteBuilder(JsonCriterionBuilder[Estimation]):
 
 
 
-class JsonSchemaValidatingJsonCriterionBuilder(
+class ValidatingJsonCriterionBuilder(
 	JsonCriterionBuilder[Estimation]
 ):
 	def __init__(
 		self,
-		baseBuilder: JsonCriterionBuilder[Estimation],
-		schema: t.Any
+		criterionBuilder: JsonCriterionBuilder[Estimation],
+		validator: t.Callable[[t.Any], None]
 	) -> None:
-		self.__baseBuilder = baseBuilder
-		self.__schema = schema
+		self.__criterionBuilder = criterionBuilder
+		self.__validator = validator
 
 
 	def __call__(self, raw: t.Any) -> pycritic.Criterion[Estimation]:
-		jsonschema.validate(raw, self.__schema)
-		return self.__baseBuilder(raw)
+		self.__validator(raw)
+		return self.__criterionBuilder(raw)

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import typing as t
 
 import pycritic
+from data_loader import CheckerDataLoader
 
 
 
@@ -13,25 +14,15 @@ class JsonCheckerBuilder(ABC):
 
 
 class BasicJsonCheckerBuilder(JsonCheckerBuilder):
-	FUNCNAME_KEY = "func"
-	VARNAME_KEY = "arg"
-
-
 	def __init__(
 		self,
-		conditionMapping: t.Mapping[str, pycritic.Condition]
+		dataLoaderBuilder: t.Callable[[t.Any], CheckerDataLoader]
 	) -> None:
-		self.conditionMapping = conditionMapping
+		self.__dataLoaderBuilder = dataLoaderBuilder
 
 
 	def __call__(self, raw: t.Any) -> pycritic.Checker:
-		if not isinstance(raw, t.Mapping):
-			raise TypeError("mapping expected")
-
-		varName = raw[BasicJsonCheckerBuilder.VARNAME_KEY]
-		funcName = raw.get(BasicJsonCheckerBuilder.FUNCNAME_KEY)
-
-		if funcName:
-			func = self.conditionMapping[funcName]
-			return pycritic.VarChecker(varName, func)
-		return pycritic.VarChecker(varName)
+		dataLoader = self.__dataLoaderBuilder(raw)
+		varName = dataLoader.loadArgName()
+		condition = dataLoader.loadCondition()
+		return pycritic.VarChecker(varName, condition)
