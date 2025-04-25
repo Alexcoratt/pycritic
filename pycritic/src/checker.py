@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import typing as t
-import inspect
 
 
 
@@ -16,33 +15,28 @@ class Checker(ABC):
 
 
 
-class VarChecker(Checker):
-	def __init__(self, varname: str, condition: Condition = bool) -> None:
-		self.__varname = varname
+class SingleConditionChecker(Checker):
+	def __init__(self, paramName: str, condition: Condition) -> None:
+		self.__paramName = paramName
 		self.__condition = condition
-
+	
 
 	def __call__(self, estimand: Estimand) -> bool:
-		value = self.getVarValue(estimand)
+		value = estimand[self.__paramName]
 		return self.__condition(value)
 
 
-	def getVarValue(self, estimand: Estimand) -> t.Any:
-		return estimand[self.__varname]
+
+class MultiConditionChecker(Checker):
+	def __init__(
+		self,
+		paramName: str,
+		conditions: t.Iterable[Condition]
+	) -> None:
+		self.__paramName = paramName
+		self.__conditions = conditions
 
 
-
-class AutoFuncChecker(Checker):
-	def __init__(self, func: t.Callable[..., t.Any]) -> None:
-		self.__func = func
-
-	
 	def __call__(self, estimand: Estimand) -> bool:
-		requiredParams = self.getRequiredParams(estimand)
-		return self.__func(**requiredParams)
-
-
-	def getRequiredParams(self, estimand: Estimand) -> t.Mapping[str, t.Any]:
-		signature = inspect.signature(self.__func)
-		paramNames = signature.parameters.keys()
-		return {pname: estimand[pname] for pname in paramNames}
+		value = estimand[self.__paramName]
+		return all(cond(value) for cond in self.__conditions)

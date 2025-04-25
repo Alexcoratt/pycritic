@@ -1,122 +1,101 @@
 import pytest
 
 import pycritic
-from pycritic_json import makeDefaultJsonSuiteBuilder
+from pycritic_json import DefaultSuiteBuilder
 
 
 
 @pytest.fixture
 def suiteBuilder():
-	return makeDefaultJsonSuiteBuilder()
+	return DefaultSuiteBuilder()
 
 
 
-RAW_SAMPLE_SUITE = [
-	{
-		"est": {
-			"mark": 5,
-			"comment": "High quality goods and fast delivery. Just flawless"
-		},
-		"cond": [
-			{
-				"arg": "delivery_time",
-				"func": "le",
-				"example": 30
+RAW_SAMPLE_SUITE = {
+	"crit": [
+		{
+			"est": {
+				"mark": 5,
+				"comment": "High quality goods and fast delivery. Just flawless"
 			},
-			{
-				"arg": "quality",
-				"func": "eq",
-				"example": 5
-			},
-			{
-				"arg": "package",
-				"func": "eq",
-				"example": 5
-			},
-			{
-				"arg": "courier_politeness",
-				"func": "ge",
-				"example": 4
+			"cond": {
+				"delivery_time": { "le": 30 },
+				"quality": 5,
+				"package": 5,
+				"courier_politeness": { "ge": 4 }
 			}
-		]
-	},
-	{
-		"est": {
-			"mark": 4,
-			"comment": "Good quality and delivery. Well done!"
 		},
-		"cond": [
-			{
-				"arg": "delivery_time",
-				"func": "xfit",
-				"min": 0,
-				"max": 45
+		{
+			"est": {
+				"mark": 4,
+				"comment": "Good quality and delivery. Well done!"
 			},
-			{
-				"arg": "quality",
-				"func": "ge",
-				"example": 4
-			},
-			{
-				"arg": "package",
-				"func": "ge",
-				"example": 3
-			},
-			{
-				"arg": "courier_politeness",
-				"func": "ge",
-				"example": 4
+			"cond": {
+				"delivery_time": { "ge": 0, "le": 45 },
+				"quality": { "ge": 4 },
+				"package": { "ge": 3 },
+				"courier_politeness": { "ge": 4 }
 			}
-		]
-	},
-	{
-		"est": {
-			"mark": 4,
-			"comment": "Rude courier"
 		},
-		"cond": [
-			{
-				"arg": "delivery_time",
-				"func": "le",
-				"example": 30
+		{
+			"est": {
+				"mark": 4,
+				"comment": "Rude courier"
 			},
-			{
-				"arg": "quality",
-				"func": "ge",
-				"example": 5
-			},
-			{
-				"arg": "package",
-				"func": "ge",
-				"example": 4
-			},
-			{
-				"arg": "courier_politeness",
-				"func": "le",
-				"example": 3
+			"cond": {
+				"delivery_time": { "le": 30 },
+				"quality": 5,
+				"package": { "ge": 4 },
+				"courier_politeness": { "le": 3 }
 			}
-		]
-	},
-	{
-		"est": {
-			"mark": 3,
-			"comment": "Discount carries"
 		},
-		"cond": [
-			{
-				"arg": "discount_ratio",
-				"func": "ge",
-				"example": .15
+		{
+			"est": {
+				"mark": 3,
+				"comment": "Discount carries"
+			},
+			"cond": {
+				"discount_ratio": { "ge": .15 }
 			}
-		]
-	},
-	{
-		"est": {
-			"mark": 1,
-			"comment": "I'm disappointed!"
+		},
+		{
+			"est": {
+				"mark": 1,
+				"comment": "I'm disappointed!"
+			}
+		}
+	],
+
+	"schema": {
+		"$schema": "http://json-schema.org/draft-04/schema#",
+		"type": "object",
+		"properties": {
+			"delivery_time": { "type": "number" },
+			"quality": { "$ref": "#/definitions/mark5" },
+			"package": { "$ref": "#/definitions/mark5" },
+			"courier_politeness": { "$ref": "#/definitions/mark5" },
+			"discount_ratio": {
+				"type": "number",
+				"minimum": 0,
+				"maximum": 1
+			}
+		},
+		"required": [
+			"delivery_time",
+			"quality",
+			"package",
+			"courier_politeness",
+			"discount_ratio"
+		],
+		"definitions": {
+			"mark5": {
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 5
+			}
 		}
 	}
-]
+}
 
 
 

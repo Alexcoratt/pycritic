@@ -1,4 +1,4 @@
-crit:
+crit: # criterion
   - est:
       mark: 1
       comment: "Test"
@@ -6,8 +6,8 @@ crit:
       var1:
 
       # comparison functions: lt, le, gt, ge, eq, ne
-      var2:
-        lt: 5.2
+      var2: # checker
+        lt: 5.2 # condition
 
   - est:
       mark: 1

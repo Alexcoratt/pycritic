@@ -31,6 +31,22 @@ class BasicCriterion(Criterion[Estimation]):
 
 
 
+class ValidatingCriterion(Criterion[Estimation]):
+	def __init__(
+		self,
+		criterion: Criterion[Estimation],
+		validator: t.Callable[[Estimand], None]
+	) -> None:
+		self.__criterion = criterion
+		self.__validator = validator
+
+
+	def __call__(self, estimand: Estimand) -> Estimation:
+		self.__validator(estimand)
+		return self.__criterion(estimand)
+
+
+
 class Suite(Criterion[Estimation]):
 	def __init__(self, criteria: t.Iterable[Criterion]) -> None:
 		self.criteria = criteria

@@ -5,26 +5,38 @@ import pycritic
 
 SUITE = pycritic.Suite([
 	pycritic.BasicCriterion(0, [
-		pycritic.AutoFuncChecker(lambda status: status == "fired")
+		pycritic.SingleConditionChecker(
+			"status",
+			lambda status: status == "fired"
+		)
 	]),
 	pycritic.BasicCriterion(5, [
-		pycritic.AutoFuncChecker(lambda reputation: reputation >= .9)
+		pycritic.SingleConditionChecker(
+			"reputation",
+			lambda reputation: reputation >= .9
+		)
 	]),
 	pycritic.BasicCriterion(5, [
-		pycritic.AutoFuncChecker(lambda effectiveness: effectiveness >= .95)
+		pycritic.SingleConditionChecker(
+			"effectiveness",
+			lambda effectiveness: effectiveness >= .95
+		)
 	]),
 	pycritic.BasicCriterion(4, [
-		pycritic.AutoFuncChecker(lambda effectiveness: effectiveness >= .8)
-	]),
-	pycritic.BasicCriterion(3, [
-		pycritic.AutoFuncChecker(
-			lambda experience, effectiveness: \
-				experience >= 2 and effectiveness >= .7
+		pycritic.SingleConditionChecker(
+			"effectiveness",
+			lambda effectiveness: effectiveness >= .8
 		)
 	]),
 	pycritic.BasicCriterion(2, [
-		pycritic.AutoFuncChecker(lambda experience: experience >= 2),
-		pycritic.AutoFuncChecker(lambda effectiveness: effectiveness >= .5)
+		pycritic.SingleConditionChecker(
+			"experience",
+			lambda experience: experience >= 2
+		),
+		pycritic.SingleConditionChecker(
+			"effectiveness",
+			lambda effectiveness: effectiveness >= .5
+		)
 	]),
 	pycritic.BasicCriterion(1)
 ])
@@ -75,7 +87,7 @@ EMPLOYEES = [
 	(0, 5),
 	(1, 5),
 	(2, 0),
-	(3, 3),
+	(3, 2),
 	(4, 1)
 ))
 def testSuite(employeeId, expectedEst):

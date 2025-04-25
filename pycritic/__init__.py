@@ -1,6 +1,6 @@
 from .src.checker import \
 	Estimand, Condition \
-,	Checker, VarChecker, AutoFuncChecker
+,	Checker, MultiConditionChecker, SingleConditionChecker
 
-from .src.suite import \
-	Estimation, Criterion, BasicCriterion, Suite
+from .src.criterion import \
+	Estimation, Criterion, BasicCriterion, ValidatingCriterion, Suite
