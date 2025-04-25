@@ -1,33 +1,43 @@
-- est:
-    mark: 1
-    comment: "Test"
-  cond:
-    - arg: var1
+crit:
+  - est:
+      mark: 1
+      comment: "Test"
+    cond:
+      var1:
 
-    # comparison functions: lt, le, gt, ge, eq, ne
-    - func: lt
-      arg: var2
-      example: 5.2
+      # comparison functions: lt, le, gt, ge, eq, ne
+      var2:
+        lt: 5.2
 
-- est:
-    mark: 1
-  cond:
-    - func: eq
-      arg: var4
-      example: 5
-  
-- est:
-    mark: 1
-    comment: "'or' operator analogue"
-  cond:
-    # fit   -> (min, max)
-    # nfit  -> [min, max)
-    # xfit  -> (min, max]
-    # nxfit -> [min, max]
-    - func: fit
-      arg: var3
-      min: 6
-      max: 10
-    - func: regex
-      arg: var10
-      pattern: "^some pattern$"
+  - est:
+      mark: 1
+    cond:
+      var4: 5
+    
+  - est:
+      mark: 1
+    cond:
+      var3:
+        gt: 6
+        lt: 10
+      var5:
+        regex: some pattern
+
+schema:
+  $schema: http://json-schema.org/draft-04/schema#
+  type: object
+  properties:
+    var1:
+    var2:
+      type: number
+    var3:
+      type: number
+    var4:
+    var5:
+      type: string
+  required:
+    - var1
+    - var2
+    - var3
+    - var4
+    - var5

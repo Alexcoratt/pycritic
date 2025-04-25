@@ -1,44 +1,36 @@
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"title": "pycritic suite",
-	"description": "JSON-schema for a pycritic suite",
-	"type": "array",
-	"items": {
-		"title": "criterion",
-		"description": "Estimation criterion",
-		"type": "object",
-		"properties": {
-			"est": {
-				"title": "estimation",
-				"description": "Estimation to be returned after a success assertion of the criterion"
-			},
-			"cond": {
-				"title": "condition array",
-				"description": "Conditions to be asserted",
-				"type": "array",
-				"items": {
-					"title": "condition",
-					"description": "Condition to be asserted",
-					"type": "object",
-					"properties": {
-						"func": {"$ref": "#/definitions/symbol"},
-						"arg": {"$ref": "#/definitions/symbol"}
+	"type": "object",
+	"properties": {
+		"crit": {
+			"title": "criteria",
+			"type": "array",
+			"items": {
+				"title": "criterion",
+				"type": "object",
+				"properties": {
+					"est": {
+						"title": "estimation"
 					},
-					"required": ["arg"],
-					"additionalProperties": true
-				}
-			}
+					"cond": {
+						"title": "conditions",
+						"type": "object",
+						"additionalProperties": true
+					}
+				},
+				"required": ["est"]
+			},
+			"minItems": 0
 		},
-		"required": ["est"]
-	},
-	"minItems": 0,
-
-	"definitions": {
-		"symbol": {
-			"title": "symbol name",
-			"description": "key of a symbol (function or variable)",
-			"type": "string",
-			"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+		"schema": {
+			"title": "Request body schema",
+			"type": "object",
+			"properties": {
+				"$schema": { "type": "string" }
+			},
+			"required": [ "$schema" ],
+			"additionalProperties": true
 		}
 	}
 }
