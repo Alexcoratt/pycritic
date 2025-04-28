@@ -42,11 +42,11 @@ class DefaultCheckerBuilder(CheckerBuilder):
 
 	def __call__(self, raw: t.Any) -> pycritic.Checker:
 		if isinstance(raw, t.Mapping):
-			conditions = map(
+			conditions = list(map(
 				lambda item: DefaultCheckerBuilder.\
 					CONDITION_BUILDER_MAPPING[item[0]](item[1]),
 				raw.items()
-			)
+			))
 			return pycritic.MultiConditionChecker(self.__paramName, conditions)
 
 		condition = DefaultCheckerBuilder.DEFAULT_CONDITION_BUILDER(raw)

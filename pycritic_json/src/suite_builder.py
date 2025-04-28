@@ -51,7 +51,7 @@ class DefaultSuiteBuilder(CriterionBuilder[Estimation]):
 			raise TypeError("mapping expected")
 		
 		rawCriteria = raw[DefaultSuiteBuilder.CRITERIA_KEY]
-		criteria = map(DefaultSuiteBuilder.CRITERION_BUILDER, rawCriteria)
+		criteria = list(map(DefaultSuiteBuilder.CRITERION_BUILDER, rawCriteria))
 
 		baseSuite = pycritic.Suite(criteria)
 
