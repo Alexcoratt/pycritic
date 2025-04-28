@@ -15,6 +15,15 @@ RAW_SAMPLE_SUITE = {
 	"crit": [
 		{
 			"est": {
+				"mark": 2,
+				"comment": "Eww... Josh?.." # Just kidding; name does not matter :)
+			},
+			"cond": {
+				"courier_name": { "regex": "^Josh.*$" }
+			}
+		},
+		{
+			"est": {
 				"mark": 5,
 				"comment": "High quality goods and fast delivery. Just flawless"
 			},
@@ -74,6 +83,7 @@ RAW_SAMPLE_SUITE = {
 			"quality": { "$ref": "#/definitions/mark5" },
 			"package": { "$ref": "#/definitions/mark5" },
 			"courier_politeness": { "$ref": "#/definitions/mark5" },
+			"courier_name": { "type": "string" },
 			"discount_ratio": {
 				"type": "number",
 				"minimum": 0,
@@ -112,6 +122,7 @@ def sampleSuite(suiteBuilder):
 			"quality": 4,
 			"package": 5,
 			"courier_politeness": 5,
+			"courier_name": "John Doe",
 			"discount_ratio": 0
 		},
 		4
@@ -122,6 +133,7 @@ def sampleSuite(suiteBuilder):
 			"quality": 3,
 			"package": 3,
 			"courier_politeness": 4,
+			"courier_name": "Jane Foe",
 			"discount_ratio": .05
 		},
 		1
@@ -132,6 +144,7 @@ def sampleSuite(suiteBuilder):
 			"quality": 3,
 			"package": 3,
 			"courier_politeness": 4,
+			"courier_name": "James Boe",
 			"discount_ratio": .15
 		},
 		3
@@ -142,9 +155,21 @@ def sampleSuite(suiteBuilder):
 			"quality": 5,
 			"package": 5,
 			"courier_politeness": 5,
+			"courier_name": "John Doe",
 			"discount_ratio": .10
 		},
 		5
+	),
+	(
+		{
+			"delivery_time": 25,
+			"quality": 5,
+			"package": 5,
+			"courier_politeness": 5,
+			"courier_name": "Josh Moe",
+			"discount_ratio": .12
+		},
+		2
 	)
 ))
 def testCritic(delivery, expected, sampleSuite):

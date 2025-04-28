@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 import typing as t
+
 import functools
+import re
 
 import pycritic
 
@@ -23,6 +25,17 @@ def getComparator(sample: t.Any, func: t.Callable[[
 
 
 
+class MatchCondition:
+	def __init__(self, pattern: str) -> None:
+		self.__regex = re.compile(pattern)
+
+
+	def __call__(self, s: str) -> bool:
+		matchResult = self.__regex.match(s)
+		return bool(matchResult)
+
+
+
 class DefaultCheckerBuilder(CheckerBuilder):
 	CONDITION_BUILDER_MAPPING = {
 		# binary comparison
@@ -31,7 +44,10 @@ class DefaultCheckerBuilder(CheckerBuilder):
 		"gt": functools.partial(getComparator, func=lambda l, r: l > r),
 		"ge": functools.partial(getComparator, func=lambda l, r: l >= r),
 		"eq": functools.partial(getComparator, func=lambda l, r: l == r),
-		"ne": functools.partial(getComparator, func=lambda l, r: l != r)
+		"ne": functools.partial(getComparator, func=lambda l, r: l != r),
+
+		# other
+		"regex": MatchCondition
 	}
 	DEFAULT_CONDITION_BUILDER = CONDITION_BUILDER_MAPPING["eq"]
 
