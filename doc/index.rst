@@ -21,7 +21,7 @@ Main components used to create an estimation function are:
 * Estimation - a value representing the result of an estimation process.
 * Estimand - a data to be validated by a criterion.
 * Condition - a boolean function taking a single parameter.
-* Criterion - a function returning an estimation (the basic criterion returns a bound estimation after asserting a bound condition).
+* Criterion - a function returning an estimation (the BasicCriterion returns a bound estimation after asserting a bound condition).
 
 PyCritic JSON
 =============
