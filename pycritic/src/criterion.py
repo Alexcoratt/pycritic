@@ -5,6 +5,7 @@ from .checker import Estimand, Checker
 
 
 Estimation = t.TypeVar("Estimation")
+"""The estimation generic type"""
 
 
 
