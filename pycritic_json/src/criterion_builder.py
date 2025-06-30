@@ -9,8 +9,20 @@ from .checker_builder import DefaultCheckerBuilder
 
 
 class CriterionBuilder(ABC, t.Generic[Estimation]):
+	"""Criterion builder base class
+	
+	Converts given raw data into a criterion.
+	"""
+
 	@abstractmethod
 	def __call__(self, raw: t.Any) -> pycritic.Criterion[Estimation]:
+		"""
+		
+		:param raw: Raw data to be converted
+		:type raw: typing.Any
+
+		:return: pycritic.Criterion[Estimation]
+		"""
 		pass
 
 
@@ -18,29 +30,68 @@ class CriterionBuilder(ABC, t.Generic[Estimation]):
 class ValidatingCriterionBuilder(
 	CriterionBuilder[Estimation]
 ):
+	"""Validating criterion builder; decorator
+	
+	Validates provided raw data before creating a criterion.
+	"""
+
 	def __init__(
 		self,
 		criterionBuilder: CriterionBuilder[Estimation],
 		validator: t.Callable[[t.Any], None]
 	) -> None:
+		"""
+
+		:param criterionBuilder: A basic criterion builder
+		:type criterionBuilder: CriterionBuilder[Estimation]
+
+		:param validator: Raw data validating function
+		:type validator: typing.Callable[[t.Any], None]
+		"""
 		self.__criterionBuilder = criterionBuilder
 		self.__validator = validator
 
 
 	def __call__(self, raw: t.Any) -> pycritic.Criterion[Estimation]:
+		"""
+		
+		:param raw: Raw data to be converted
+		:type raw: typing.Any
+
+		:return: A criterion
+		:rtype: pycritic.Criterion[Estimation]
+		"""
 		self.__validator(raw)
 		return self.__criterionBuilder(raw)
 
 
 
 class DefaultCriterionBuilder(CriterionBuilder):
+	"""Default criterion builder
+	
+	The criterion builder which is used by default.
+	"""
+
 	CHECKER_BUILDER = lambda paramName, rawConditions: \
 		DefaultCheckerBuilder(paramName)(rawConditions)
+	"""The checker-building function"""
+
 	ESTIMATION_KEY = "est"
+	"""Key of the estimation parameter in a config"""
+
 	CHECKERS_KEY = "cond"
+	"""Key of the condition list in a config"""
 
 
 	def __call__(self, raw: t.Any) -> pycritic.Criterion:
+		"""
+		
+		:param raw: Raw data to be converted
+		:type raw: typing.Any
+
+		:return: A criterion
+		:rtype: pycritic.Criterion
+		"""
 		if not isinstance(raw, t.Mapping):
 			raise TypeError("mapping expected", raw)
 
