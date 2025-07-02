@@ -9,3 +9,8 @@ __pycache__
 
 # env files
 *.env
+
+# python package setup generated files
+build
+dist
+*.egg-info
