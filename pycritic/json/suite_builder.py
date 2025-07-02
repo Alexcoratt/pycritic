@@ -5,8 +5,7 @@ import logging
 import json
 import jsonschema
 
-import pycritic
-from pycritic import Estimation
+from ..base import Estimation, Criterion, ValidatingCriterion, Suite
 
 from .criterion_builder import \
 	CriterionBuilder, DefaultCriterionBuilder
@@ -31,7 +30,7 @@ class DefaultSuiteBuilder(CriterionBuilder[Estimation]):
 	SCHEMA_ENV_KEY = "PYCRITIC_SUITE_SCHEMA"
 	"""Key of the environmental variable storing path to a schema for a suite"""
 
-	DEFAULT_SCHEMA_FILENAME = "../schemas/suite.schema.json"
+	DEFAULT_SCHEMA_FILENAME = "./schemas/suite.schema.json"
 	"""Default relative path to a schema for a suite"""
 
 
@@ -63,13 +62,16 @@ class DefaultSuiteBuilder(CriterionBuilder[Estimation]):
 
 
 
-	def __call__(self, raw: t.Any) -> pycritic.Criterion[Estimation]:
+	def __call__(self, raw: t.Any) -> Criterion[Estimation]:
 		"""
 		
 		Validates the parameter value using the schema and decides which one criterion to create
 
 		:param raw: A raw data to convert
 		:type raw: typing.Any
+
+		:return: A criterion
+		:rtype: Criterion[Estimation]
 		"""
 		jsonschema.validate(raw, self.__schema)
 
@@ -79,11 +81,11 @@ class DefaultSuiteBuilder(CriterionBuilder[Estimation]):
 		rawCriteria = raw[DefaultSuiteBuilder.CRITERIA_KEY]
 		criteria = list(map(DefaultSuiteBuilder.CRITERION_BUILDER, rawCriteria))
 
-		baseSuite = pycritic.Suite(criteria)
+		baseSuite = Suite(criteria)
 
 		try:
 			schema = raw[DefaultSuiteBuilder.ESTIMAND_SCHEMA_KEY]
 			validator = lambda raw: jsonschema.validate(raw, schema)
-			return pycritic.ValidatingCriterion(baseSuite, validator)
+			return ValidatingCriterion(baseSuite, validator)
 		except KeyError:
 			return baseSuite

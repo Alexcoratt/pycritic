@@ -1,44 +1,44 @@
 import pytest
-import pycritic
+import pycritic.base
 
 
 
-SUITE = pycritic.Suite([
-	pycritic.BasicCriterion(0, [
-		pycritic.SingleConditionChecker(
+SUITE = pycritic.base.Suite([
+	pycritic.base.BasicCriterion(0, [
+		pycritic.base.SingleConditionChecker(
 			"status",
 			lambda status: status == "fired"
 		)
 	]),
-	pycritic.BasicCriterion(5, [
-		pycritic.SingleConditionChecker(
+	pycritic.base.BasicCriterion(5, [
+		pycritic.base.SingleConditionChecker(
 			"reputation",
 			lambda reputation: reputation >= .9
 		)
 	]),
-	pycritic.BasicCriterion(5, [
-		pycritic.SingleConditionChecker(
+	pycritic.base.BasicCriterion(5, [
+		pycritic.base.SingleConditionChecker(
 			"effectiveness",
 			lambda effectiveness: effectiveness >= .95
 		)
 	]),
-	pycritic.BasicCriterion(4, [
-		pycritic.SingleConditionChecker(
+	pycritic.base.BasicCriterion(4, [
+		pycritic.base.SingleConditionChecker(
 			"effectiveness",
 			lambda effectiveness: effectiveness >= .8
 		)
 	]),
-	pycritic.BasicCriterion(2, [
-		pycritic.SingleConditionChecker(
+	pycritic.base.BasicCriterion(2, [
+		pycritic.base.SingleConditionChecker(
 			"experience",
 			lambda experience: experience >= 2
 		),
-		pycritic.SingleConditionChecker(
+		pycritic.base.SingleConditionChecker(
 			"effectiveness",
 			lambda effectiveness: effectiveness >= .5
 		)
 	]),
-	pycritic.BasicCriterion(1)
+	pycritic.base.BasicCriterion(1)
 ])
 
 

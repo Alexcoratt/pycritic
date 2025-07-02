@@ -4,7 +4,7 @@ import typing as t
 import functools
 import re
 
-import pycritic
+from ..base import Checker, MultiConditionChecker, SingleConditionChecker
 
 
 
@@ -15,14 +15,14 @@ class CheckerBuilder(ABC):
 	"""
 
 	@abstractmethod
-	def __call__(self, raw: t.Any) -> pycritic.Checker:
+	def __call__(self, raw: t.Any) -> Checker:
 		"""
 		
 		:param raw: A raw data to be converted into a checker
 		:type raw: typing.Any
 
 		:return: A checker
-		:rtype: pycritic.Checker
+		:rtype: Checker
 		"""
 		pass
 
@@ -116,14 +116,14 @@ class DefaultCheckerBuilder(CheckerBuilder):
 		self.__paramName = paramName
 
 
-	def __call__(self, raw: t.Any) -> pycritic.Checker:
+	def __call__(self, raw: t.Any) -> Checker:
 		"""
 		
 		:param raw: A `JSON` expression to be converted into a checker
 		:type raw: typing.Any
 
 		:return: A checker
-		:rtype: pycritic.Checker
+		:rtype: Checker
 		"""
 		if isinstance(raw, t.Mapping):
 			conditions = list(map(
@@ -131,7 +131,7 @@ class DefaultCheckerBuilder(CheckerBuilder):
 					CONDITION_BUILDER_MAPPING[item[0]](item[1]),
 				raw.items()
 			))
-			return pycritic.MultiConditionChecker(self.__paramName, conditions)
+			return MultiConditionChecker(self.__paramName, conditions)
 
 		condition = DefaultCheckerBuilder.DEFAULT_CONDITION_BUILDER(raw)
-		return pycritic.SingleConditionChecker(self.__paramName, condition)
+		return SingleConditionChecker(self.__paramName, condition)

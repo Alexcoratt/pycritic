@@ -1,13 +1,12 @@
 import pytest
 
-import pycritic
-from pycritic_json import DefaultSuiteBuilder
+import pycritic.json
 
 
 
 @pytest.fixture
 def suiteBuilder():
-	return DefaultSuiteBuilder()
+	return pycritic.json.DefaultSuiteBuilder()
 
 
 
