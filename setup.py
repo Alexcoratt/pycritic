@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pycritic',
-    version='0.2.0',
+    version='0.2.1',
     author='Alexander Smirnov',
     author_email='aleqsonder@icloud.com',
     description='A package for estimating a set of parameters',
@@ -15,4 +15,8 @@ setup(
         'Operating System :: OS Independent',
     ],
     python_requires='>=3.11',
+    install_requires=[
+		"jsonschema",
+		"requests"
+    ]
 )
