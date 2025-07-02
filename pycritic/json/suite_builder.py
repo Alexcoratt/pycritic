@@ -1,7 +1,8 @@
 import typing as t
 
-import os
 import logging
+import pprint
+
 import json
 import jsonschema
 
@@ -30,36 +31,60 @@ class DefaultSuiteBuilder(CriterionBuilder[Estimation]):
 	SCHEMA_ENV_KEY = "PYCRITIC_SUITE_SCHEMA"
 	"""Key of the environmental variable storing path to a schema for a suite"""
 
-	DEFAULT_SCHEMA_FILENAME = "./schemas/suite.schema.json"
-	"""Default relative path to a schema for a suite"""
+	DEFAULT_SCHEMA = {
+		"$schema": "http://json-schema.org/draft-04/schema#",
+		"title": "PyCritic default suite",
+		"type": "object",
+		"properties": {
+			"schema": {
+				"title": "Schema of an estimand",
+				"type": "object",
+				"additionalProperties": True
+			},
+			"crit": {
+				"title": "A criteria list",
+				"type": "array",
+				"items": {
+					"title": "A criterion",
+					"type": "object",
+					"properties": {
+						"est": {
+							"title": "An estimation"
+						},
+						"cond": {
+							"title": "A condition list",
+							"type": "object",
+							"additionalProperties": True
+						}
+					},
+					"required": [
+						"est"
+					]
+				},
+				"minItems": 0
+			}
+		}
+	}
+	"""Default schema for a suite"""
 
 
-	def __init__(self) -> None:
-		self.loadSchema()
+	def __init__(self, schemaFilename: t.Union[str, None] = None) -> None:
+		if schemaFilename:
+			self.__loadSuiteSchema(schemaFilename)
+		else:
+			self.__setDefaultSuiteSchema()
 
 
-	def loadSchema(self) -> None:
-		"""Load a JSON schema"""
-		filename = DefaultSuiteBuilder.getSchemaFilename()
-		with open(filename) as file:
+	def __loadSuiteSchema(self, schemaFilename: str) -> None:
+		logging.warning(f"Loading suite schema from '{schemaFilename}'")
+		with open(schemaFilename) as file:
 			self.__schema = json.load(file)
 
 
-	@staticmethod
-	def getSchemaFilename() -> str:
-		"""Get a filepath to a schema
-		
-		:return: Filepath to a schema
-		:rtype: str
-		"""
-		try:
-			return os.environ[DefaultSuiteBuilder.SCHEMA_ENV_KEY]
-		except KeyError:
-			dir = os.path.dirname(__file__)
-			filename = os.path.join(dir, DefaultSuiteBuilder.DEFAULT_SCHEMA_FILENAME)
-			logging.warning(f"using the default pycritic schema file: {filename}")
-			return filename
-
+	def __setDefaultSuiteSchema(self) -> None:
+		logging.warning("No suite schema filename given; using the default suite schema")
+		logging.debug(pprint.pformat(DefaultSuiteBuilder.DEFAULT_SCHEMA))
+		self.__schema = DefaultSuiteBuilder.DEFAULT_SCHEMA
 
 
 	def __call__(self, raw: t.Any) -> Criterion[Estimation]:
