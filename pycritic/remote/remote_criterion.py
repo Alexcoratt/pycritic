@@ -2,7 +2,7 @@ import typing as t
 
 import requests
 
-from pycritic import Criterion, Estimand, Estimation
+from ..base import Criterion, Estimand, Estimation
 
 
 

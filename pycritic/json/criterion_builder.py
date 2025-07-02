@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 import typing as t
 
-import pycritic
-from pycritic import Estimation
+from ..base import Estimation, Criterion, BasicCriterion
 
 from .checker_builder import DefaultCheckerBuilder
 
@@ -15,21 +14,19 @@ class CriterionBuilder(ABC, t.Generic[Estimation]):
 	"""
 
 	@abstractmethod
-	def __call__(self, raw: t.Any) -> pycritic.Criterion[Estimation]:
+	def __call__(self, raw: t.Any) -> Criterion[Estimation]:
 		"""
 		
 		:param raw: Raw data to be converted
 		:type raw: typing.Any
 
-		:return: pycritic.Criterion[Estimation]
+		:return: Criterion[Estimation]
 		"""
 		pass
 
 
 
-class ValidatingCriterionBuilder(
-	CriterionBuilder[Estimation]
-):
+class ValidatingCriterionBuilder(CriterionBuilder[Estimation]):
 	"""Validating criterion builder; decorator
 	
 	Validates provided raw data before creating a criterion.
@@ -52,21 +49,21 @@ class ValidatingCriterionBuilder(
 		self.__validator = validator
 
 
-	def __call__(self, raw: t.Any) -> pycritic.Criterion[Estimation]:
+	def __call__(self, raw: t.Any) -> Criterion[Estimation]:
 		"""
 		
 		:param raw: Raw data to be converted
 		:type raw: typing.Any
 
 		:return: A criterion
-		:rtype: pycritic.Criterion[Estimation]
+		:rtype: Criterion[Estimation]
 		"""
 		self.__validator(raw)
 		return self.__criterionBuilder(raw)
 
 
 
-class DefaultCriterionBuilder(CriterionBuilder):
+class DefaultCriterionBuilder(CriterionBuilder[Estimation]):
 	"""Default criterion builder
 	
 	The criterion builder which is used by default.
@@ -83,14 +80,14 @@ class DefaultCriterionBuilder(CriterionBuilder):
 	"""Key of the condition list in a config"""
 
 
-	def __call__(self, raw: t.Any) -> pycritic.Criterion:
+	def __call__(self, raw: t.Any) -> Criterion[Estimation]:
 		"""
 		
 		:param raw: Raw data to be converted
 		:type raw: typing.Any
 
 		:return: A criterion
-		:rtype: pycritic.Criterion
+		:rtype: Criterion[Estimation]
 		"""
 		if not isinstance(raw, t.Mapping):
 			raise TypeError("mapping expected", raw)
@@ -102,4 +99,4 @@ class DefaultCriterionBuilder(CriterionBuilder):
 		]
 
 		estimation = raw[DefaultCriterionBuilder.ESTIMATION_KEY]
-		return pycritic.BasicCriterion(estimation, checkers)
+		return BasicCriterion(estimation, checkers)
