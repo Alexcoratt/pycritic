@@ -1,2 +1,7 @@
 # sphinx build files
 _build
+
+# sphinx generated rst-files
+*.rst
+!index.rst
+
