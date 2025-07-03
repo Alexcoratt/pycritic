@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 		name='pycritic',
-		version='0.2.2',
+		version='0.2.3',
 		author='Alexander Smirnov',
 		author_email='aleqsonder@icloud.com',
 		description='A package for estimating a set of parameters',
