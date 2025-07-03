@@ -10,7 +10,7 @@ setup: setup_requirements
 	$(PYTHON) setup.py sdist bdist_wheel
 
 clean:
-	rm -rf sdist bdist_wheel *.egg-info
+	rm -rf dist build *.egg-info
 
 %requirements:
 	$(PIP) install --no-cache-dir -r $@.txt
