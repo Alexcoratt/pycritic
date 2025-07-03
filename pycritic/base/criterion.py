@@ -1,5 +1,9 @@
 from abc import ABC, abstractmethod
 import typing as t
+
+import logging
+import traceback
+
 from .checker import Estimand, Checker
 
 
@@ -146,3 +150,45 @@ class Suite(Criterion[Estimation]):
 			except AssertionError:
 				pass
 		raise AssertionError
+
+
+
+class SafeCriterion(Criterion[Estimation]):
+	"""The safe criterion class
+	
+	Object of that class are decorators containing main and reserve criteria.
+	If the main criteria failed the reserve is being called.
+	"""
+
+
+	def __init__(self,
+		mainCriterion: Criterion[Estimation],
+		reserveCriterion: Criterion[Estimation]
+	) -> None:
+		"""
+		
+		:param mainCriterion: The main criterion
+		:type mainCriterion: Criterion[Estimation]
+
+		:param reserveCriterion: The reserve criterion
+		:type reserveCriterion: Criterion[Estimation]
+		"""
+		self.__main = mainCriterion
+		self.__reserve = reserveCriterion
+
+
+	def __call__(self, estimand: Estimand) -> Estimation:
+		"""
+		
+		:param estimand: An estimand
+		:type estimand: Estimand
+
+		:return: An estimation
+		:rtype: Estimation
+		"""
+		try:
+			return self.__main(estimand)
+		except Exception as err:
+			logging.error(err)
+			logging.debug(traceback.format_exc())
+			return self.__reserve(estimand)
